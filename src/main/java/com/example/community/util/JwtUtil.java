@@ -44,6 +44,15 @@ public class JwtUtil {
         return Jwts.parser().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
     }
 
+    public String extractEmail(String token) {
+        return extractAllClaims(token).getSubject();
+    }
+
+    public Long extractUserId(String token) {
+        return extractAllClaims(token).get("userId", Long.class);
+    }
+
+
     public boolean isTokenExpired(String token) {
         return extractAllClaims(token).getExpiration().before(new Date());
     }
