@@ -52,7 +52,10 @@ public class UserController {
 
 
     @PutMapping("/{userId}/password")
-    public ResponseEntity<User> updatePassword(@PathVariable Long userId, @RequestBody Map<String, String> request,@RequestHeader("Authorization") String token) {
+    public ResponseEntity<User> updatePassword(
+            @PathVariable Long userId,
+            @RequestBody Map<String, String> request,
+            @RequestHeader("Authorization") String token) {
         System.out.println("비번수정시도");
         String newPassword = request.get("password");
         try {
@@ -73,12 +76,14 @@ public class UserController {
     public ResponseEntity<String> updateUserProfile(
             @PathVariable Long userId,
             @RequestParam(value = "nickname", required = false) String nickname,
-            @RequestParam(value = "image", required = false) MultipartFile imageFile) {
+            @RequestParam(value = "image", required = false) MultipartFile imageFile,
+            @RequestHeader("Authorization") String token) {
         System.out.println("프로필수정시도");
         try {
-
-
-
+            Long tokenUserId = jwtUtil.extractUserId(token.replace("Bearer ", ""));
+            if (!userId.equals(tokenUserId)) {
+                return ResponseEntity.status(403).body(null);
+            }
             userService.updateUserProfile(userId, nickname, imageFile);
             System.out.println("프로필수정성공");
             return ResponseEntity.ok("Profile updated successfully");
