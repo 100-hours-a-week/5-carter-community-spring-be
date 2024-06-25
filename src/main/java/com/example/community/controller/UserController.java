@@ -55,7 +55,7 @@ public class UserController {
     public ResponseEntity<User> updatePassword(
             @PathVariable Long userId,
             @RequestBody Map<String, String> request,
-            @RequestHeader("Authorization") String token) {
+            @CookieValue("jwt") String token) {
         System.out.println("비번수정시도");
         String newPassword = request.get("password");
         try {
@@ -77,13 +77,16 @@ public class UserController {
             @PathVariable Long userId,
             @RequestParam(value = "nickname", required = false) String nickname,
             @RequestParam(value = "image", required = false) MultipartFile imageFile,
-            @RequestHeader("Authorization") String token) {
+            @CookieValue("jwt") String token) {
         System.out.println("프로필수정시도");
         try {
             Long tokenUserId = jwtUtil.extractUserId(token.replace("Bearer ", ""));
+            System.out.println(tokenUserId);
+            System.out.println(userId);
             if (!userId.equals(tokenUserId)) {
                 return ResponseEntity.status(403).body(null);
             }
+            System.out.println(54321);
             userService.updateUserProfile(userId, nickname, imageFile);
             System.out.println("프로필수정성공");
             return ResponseEntity.ok("Profile updated successfully");
@@ -97,7 +100,7 @@ public class UserController {
     }
 
     @DeleteMapping("{userId}")
-    public ResponseEntity<String> deleteUser(@RequestHeader("Authorization") String token){
+    public ResponseEntity<String> deleteUser(@CookieValue("jwt") String token){
         System.out.println("회원 삭제 요청");
         String jwtToken = token.replace("Bearer ", "");
         Long userId = jwtUtil.extractUserId(jwtToken);
@@ -116,5 +119,6 @@ public class UserController {
         }
 
     }
+
 
 }

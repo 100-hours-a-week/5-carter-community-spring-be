@@ -48,7 +48,7 @@ public class PostController {
             @RequestParam("title") String title,
             @RequestParam("content") String content,
             @RequestPart("image") MultipartFile imageFile,
-            @RequestHeader("Authorization") String token) {
+            @CookieValue("jwt") String token) {
 
         System.out.println("게시글 추가 시도");
         String jwtToken = token.replace("Bearer ", "");
@@ -79,7 +79,7 @@ public class PostController {
             @RequestParam("title") String title,
             @RequestParam("content") String content,
             @RequestPart(value = "image", required = false) MultipartFile imageFile,
-            @RequestHeader("Authorization") String token) {
+            @CookieValue("jwt") String token) {
 
         System.out.println("게시글 수정 시도");
         String jwtToken = token.replace("Bearer ", "");
@@ -99,7 +99,9 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletePost(@PathVariable Long id,@RequestHeader("Authorization") String token) {
+    public ResponseEntity<String> deletePost(
+            @PathVariable Long id,
+            @CookieValue("jwt") String token) {
         System.out.println("삭제 시도");
         String jwtToken = token.replace("Bearer ", "");
         Long userId = jwtUtil.extractUserId(jwtToken);

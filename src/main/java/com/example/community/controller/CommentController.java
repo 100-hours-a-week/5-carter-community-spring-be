@@ -28,7 +28,7 @@ public class CommentController {
     public ResponseEntity<Comment> addComment(
             @RequestParam("postId") Long postId,
             @RequestParam("content") String content,
-            @RequestHeader("Authorization") String token) {
+            @CookieValue("jwt") String token) {
 
         String jwtToken = token.replace("Bearer ", "");
         Long userId = jwtUtil.extractUserId(jwtToken);
@@ -41,7 +41,7 @@ public class CommentController {
     public ResponseEntity<Comment> updateComment(
             @PathVariable Long commentId,
             @RequestParam("content") String content,
-            @RequestHeader("Authorization") String token) {
+            @CookieValue("jwt") String token) {
 
         String jwtToken = token.replace("Bearer ", "");
         Long userId = jwtUtil.extractUserId(jwtToken);
@@ -53,7 +53,7 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(
             @PathVariable Long commentId,
-            @RequestHeader("Authorization") String token) {
+            @CookieValue("jwt") String token) {
 
         String jwtToken = token.replace("Bearer ", "");
         Long userId = jwtUtil.extractUserId(jwtToken);

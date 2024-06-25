@@ -78,6 +78,7 @@ public class UserService {
     }
 
     public void updateUserProfile(Long userId, String nickname, MultipartFile imageFile) throws IOException {
+        System.out.println(12345);
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
