@@ -3,6 +3,8 @@ package com.example.community.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -26,4 +28,5 @@ public class User {
 
     @Column(name = "image", nullable = false)
     private String image;
+
 }
