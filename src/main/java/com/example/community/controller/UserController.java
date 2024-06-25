@@ -96,5 +96,25 @@ public class UserController {
         }
     }
 
+    @DeleteMapping("{userId}")
+    public ResponseEntity<String> deleteUser(@RequestHeader("Authorization") String token){
+        System.out.println("회원 삭제 요청");
+        String jwtToken = token.replace("Bearer ", "");
+        Long userId = jwtUtil.extractUserId(jwtToken);
+        try{
+            Long tokenUserId = jwtUtil.extractUserId(token.replace("Bearer ", ""));
+            if (!userId.equals(tokenUserId)) {
+                return ResponseEntity.status(403).body(null);
+            }
+            userService.deleteUserById(userId);
+            System.out.println("회원 삭제 성공");
+            return ResponseEntity.ok("User deleted successfully");
+        }
+        catch (Exception e) {
+            System.out.println("회원 삭제 실패");
+            return ResponseEntity.status(500).body("Failed to update profile");
+        }
+
+    }
 
 }

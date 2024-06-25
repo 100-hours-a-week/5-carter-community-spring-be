@@ -4,7 +4,9 @@ import com.example.community.dto.PostDTO;
 import com.example.community.model.Post;
 import com.example.community.model.User;
 import com.example.community.repository.PostRepository;
+import com.example.community.repository.CommentRepository;
 import com.example.community.service.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +24,9 @@ public class PostService {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     @Autowired
     private UserService userService;
@@ -92,13 +97,16 @@ public class PostService {
         return postRepository.save(post);
     }
 
+    @Transactional
     public void deletePost(Long id, Long userId) throws IllegalArgumentException{
         Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid post ID"));
         User user = userService.getUserById(userId);
         if (!post.getUserId().equals(user.getUserId())) {
             throw new IllegalArgumentException("수정 권한 없음");
         }
+        commentRepository.deleteByPostId(id); // 댓글 삭제
         postRepository.deleteById(id);
+        System.out.println("게시글 삭제 성공");
     }
 
     private String getFileExtension(String fileName) {

@@ -64,8 +64,10 @@ public class PostController {
 
         try {
             postService.createPost(postDTO, imageFile);
+            System.out.println("게시글 추가 성공");
             return ResponseEntity.ok("추가 성공");
         } catch (IOException e){
+            System.out.println("게시글 추가 실패");
             return ResponseEntity.status(500).body("추가 실패");
         }
 
@@ -85,10 +87,13 @@ public class PostController {
 
         try {
             postService.updatePost(id, userId, title, content, imageFile);
+            System.out.println("수정 성공");
             return ResponseEntity.ok("수정 성공");
         } catch (IOException e) {
+            System.out.println("수정 실패");
             return ResponseEntity.status(500).body("수정 실패");
         } catch (IllegalArgumentException e) {
+            System.out.println("수정 권한 없음");
             return ResponseEntity.status(403).body("수정 권한 없음");
         }
     }

@@ -2,7 +2,11 @@ package com.example.community.service;
 
 import com.example.community.dto.UserDTO;
 import com.example.community.model.User;
+import com.example.community.repository.CommentRepository;
+import com.example.community.repository.PostRepository;
 import com.example.community.repository.UserRepository;
+
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,6 +26,12 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
+
+    @Autowired
+    private PostRepository postRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -84,6 +94,13 @@ public class UserService {
         } else {
             throw new IllegalStateException("User not found");
         }
+    }
+
+    @Transactional
+    public void deleteUserById(Long userId) {
+        commentRepository.deleteCommentsByUserId(userId);
+        postRepository.deletePostsByUserId(userId);
+        userRepository.deleteById(userId);
     }
 
     private String getFileExtension(String fileName) {
