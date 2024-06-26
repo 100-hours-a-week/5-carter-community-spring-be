@@ -34,7 +34,7 @@ public class AuthController {
             jwtCookie.setHttpOnly(true);
             jwtCookie.setSecure(true); // HTTPS 환경에서만 전송
             jwtCookie.setPath("/");
-            jwtCookie.setMaxAge(7 * 24 * 60 * 60); // 7일 동안 유효
+            jwtCookie.setMaxAge(60 * 60); // 1시간
             response.addCookie(jwtCookie);
 
             System.out.println("로그인 성공");

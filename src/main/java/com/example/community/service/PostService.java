@@ -10,12 +10,16 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -109,8 +113,30 @@ public class PostService {
         System.out.println("게시글 삭제 성공");
     }
 
+    @Transactional
+    public Post incrementView(Long id) {
+        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid post ID"));
+        post.setViews(post.getViews() + 1);
+        return post;
+    }
+
     private String getFileExtension(String fileName) {
         return fileName.substring(fileName.lastIndexOf(".") + 1);
+    }
+
+    public Resource loadPostImage(Long postId) throws MalformedURLException {
+        Optional<Post> postOptional = postRepository.findById(postId);
+        if (postOptional.isPresent()) {
+            String imageName = postOptional.get().getImage();
+            Path imagePath = Paths.get(POST_IMAGE_DIRECTORY).resolve(imageName).normalize();
+            return new UrlResource(imagePath.toUri());
+        } else {
+            throw new IllegalArgumentException("Invalid post ID");
+        }
+    }
+
+    public long getCommentCount(Long postId) {
+        return commentRepository.countByPostId(postId);
     }
 
 }

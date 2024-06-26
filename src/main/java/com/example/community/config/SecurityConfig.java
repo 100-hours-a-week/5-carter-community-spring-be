@@ -33,15 +33,17 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // CSRF 비활성화
                 .authorizeHttpRequests(requests -> requests
-                                .requestMatchers("/api/auth/**").permitAll() // /api/auth/** 경로 접근 허용
-                                .requestMatchers("/api/users/register").permitAll()
-//                        .requestMatchers("/api/**").permitAll()
+                                .requestMatchers("/api/auth/**",
+                                        "/api/users/register",
+                                        "/api/users/email/**",
+                                        "/api/users/nickname/**",
+                                        "/api/users",
+                                        "/api/comments").permitAll()
                                 .anyRequest().authenticated() // 나머지 요청 인증 필요
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
 

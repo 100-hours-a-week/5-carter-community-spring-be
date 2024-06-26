@@ -1,5 +1,6 @@
 package com.example.community.controller;
 
+import com.example.community.dto.CommentRequest;
 import com.example.community.model.Comment;
 import com.example.community.service.CommentService;
 import com.example.community.util.JwtUtil;
@@ -19,34 +20,33 @@ public class CommentController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @GetMapping("/post/{postId}")
+    @GetMapping("/{postId}")
     public List<Comment> getCommentsByPostId(@PathVariable Long postId) {
         return commentService.getCommentsByPostId(postId);
     }
 
     @PostMapping
-    public ResponseEntity<Comment> addComment(
-            @RequestParam("postId") Long postId,
-            @RequestParam("content") String content,
+    public ResponseEntity<Void> addComment(
+            @RequestBody CommentRequest commentRequest,
             @CookieValue("jwt") String token) {
-
+        System.out.println("댓글 추가 시도");
         String jwtToken = token.replace("Bearer ", "");
         Long userId = jwtUtil.extractUserId(jwtToken);
 
-        Comment comment = commentService.addComment(postId, userId, content);
-        return ResponseEntity.ok(comment);
+        commentService.addComment(commentRequest.getPostId(), userId, commentRequest.getContent());
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{commentId}")
     public ResponseEntity<Comment> updateComment(
             @PathVariable Long commentId,
-            @RequestParam("content") String content,
+            @RequestBody CommentRequest commentRequest,
             @CookieValue("jwt") String token) {
 
         String jwtToken = token.replace("Bearer ", "");
         Long userId = jwtUtil.extractUserId(jwtToken);
 
-        Comment updatedComment = commentService.updateComment(commentId, userId, content);
+        Comment updatedComment = commentService.updateComment(commentId, userId, commentRequest.getContent());
         return ResponseEntity.ok(updatedComment);
     }
 
