@@ -1,6 +1,7 @@
 package com.example.community.model;
 
 import jakarta.persistence.*;
+
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "comments")
 public class Comment {
     @Id

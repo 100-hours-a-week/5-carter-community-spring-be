@@ -1,15 +1,15 @@
 package com.example.community.model;
 
 import jakarta.persistence.*;
-import lombok.*;
 
-import java.util.List;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "users")
 public class User {
     @Id
@@ -28,5 +28,4 @@ public class User {
 
     @Column(name = "image", nullable = false)
     private String image;
-
 }
