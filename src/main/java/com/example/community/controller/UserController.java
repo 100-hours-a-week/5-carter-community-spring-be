@@ -225,7 +225,7 @@ public class UserController {
     public ResponseEntity<String> getEmail(@RequestHeader("Authorization") String token) {
         log.info("이메일 요청");
         try {
-            Long userId = userService.extractUserIdFromToken(token);
+            Long userId = userService.extractUserIdFromToken(token.replace("Bearer ", ""));
             String email = userService.getEmailByUserId(userId);
             log.info("이메일: {}", email);
             return ResponseEntity.ok(email);
