@@ -175,7 +175,7 @@ public class UserController {
     public ResponseEntity<Long> getUserId(@RequestHeader("Authorization") String token) {
         log.info("유저 아이디 요청");
         try {
-            Long userId = jwtUtil.extractUserId(token);
+            Long userId = jwtUtil.extractUserId(token.replace("Bearer ", ""));
             log.info("유저 아이디: {}", userId);
             return ResponseEntity.ok(userId);
         } catch (Exception e) {
